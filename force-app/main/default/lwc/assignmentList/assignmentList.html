@@ -7,6 +7,8 @@
     <template lwc:elseif={assignRecList}>
         <lightning-card title="LIGHTNING DATA TABLE">
 
+            <!-- FOR SAVING / EDIT FORM -->
+            <c-assignment-form onsave={handleSaveRecord}></c-assignment-form>
             <!-- FOR SEARCH  -->
             <lightning-layout multiple-rows>
                 <lightning-layout-item size="6" class="slds-align_absolute-left slds-p-around_medium">

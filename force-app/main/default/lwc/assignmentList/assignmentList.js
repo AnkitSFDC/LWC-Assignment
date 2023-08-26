@@ -10,7 +10,7 @@ import AssignList from '@salesforce/apex/AssignmentsList.getAssignmentList';
 export default class AssignmentList extends LightningElement {
 
     // SETTING COLUMNS FOR TABLE
-    @api columns = [{
+    @track columns = [{
         label: 'Title',
         fieldName: 'Title__c',
         type: 'text',
@@ -19,7 +19,7 @@ export default class AssignmentList extends LightningElement {
     {
         label: 'Description',
         fieldName: 'Description',
-        type: 'TextArea',
+        type: 'Text',
 
     },
     {
@@ -38,7 +38,7 @@ export default class AssignmentList extends LightningElement {
     ];
 
     // PROPERTIES TO STORE THE LIST AND RESULT
-    @api assignRecList;     // LIST OF ASSIGNMENT IN DATATABLE
+    @track assignRecList;     // LIST OF ASSIGNMENT IN DATATABLE
     @track error;           // ERROR: FROM APEX CALL
     @track searchString;    // INPUT WE GIVE IN SEARCH
     @track initialRecords;
@@ -186,5 +186,11 @@ export default class AssignmentList extends LightningElement {
     }
 
 
+    // HANDLE CHILD ELEMENT SAVE AND UPDATE ASSIGNMENT LIST
+    handleSaveRecord(evt) {
+        if (evt) {
+            this.assignRecList = [...this.assignRecList, evt.detail[0]];
+        }
+    }
 
 }

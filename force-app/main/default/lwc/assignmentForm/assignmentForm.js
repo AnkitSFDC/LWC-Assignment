@@ -1,5 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import insertAssignment from '@salesforce/apex/AssignmentsList.insertAssignment';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class AssignmentForm extends LightningElement {
     @api recordId
 
@@ -68,12 +69,34 @@ export default class AssignmentForm extends LightningElement {
             result => {
                 console.log('RESULT: ', JSON.stringify(result));
                 this.insertResult = result;
+
+                // FOR TOAST
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Success',
+                    message: 'Assignment Saved',
+                    variant: 'success'
+                }))
+
+                //FOR DISPATCHING EVENT TO PARENT(FOR UPDATING ASSIGNMENT LIST)
+                this.dispatchEvent(new CustomEvent('save', { detail: result }))
                 //location.reload();
             }
         ).catch(error => {
             this.insertError = error
             console.log('ERROR: ', JSON.stringify(error))
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'Error Creating Record',
+                message: error.body.message,
+                variant: 'error'
+            }))
+
         })
+    }
+
+
+    // FOR UPDATING THE RECORD
+    handleEdit(evt) {
+
     }
 
 }
