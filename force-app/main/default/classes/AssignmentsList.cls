@@ -37,5 +37,14 @@ public with sharing class AssignmentsList {
         }
     }
 
+    @AuraEnabled
+    public static List<Assignment__c> updateAssignment(String Id,String title,String description, Date currentdate, String status){
+        try {
+            
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
 
 }

@@ -18,8 +18,8 @@ export default class AssignmentList extends LightningElement {
     },
     {
         label: 'Description',
-        fieldName: 'Description',
-        type: 'Text',
+        fieldName: 'Description__c',
+        type: 'text',
 
     },
     {

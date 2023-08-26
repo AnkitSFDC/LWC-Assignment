@@ -62,7 +62,6 @@ export default class AssignmentForm extends LightningElement {
 
     //FOR SAVING THE RECORD
     handleSave(event) {
-        console.log('RECORD ID: ', this.recordId)
 
         // CALLING APEX TO INSERT THE ASSIGNMENT
         insertAssignment({ title: this.titleValue, description: this.descriptionValue, currentdate: this.dateValue, status: this.statusvalue }).then(
