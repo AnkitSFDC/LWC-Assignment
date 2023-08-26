@@ -1,5 +1,6 @@
 import { LightningElement, track, api } from 'lwc';
 import insertAssignment from '@salesforce/apex/AssignmentsList.insertAssignment';
+import updateAssignment from '@salesforce/apex/AssignmentsList.updateAssignment';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class AssignmentForm extends LightningElement {
     @api recordId
@@ -20,6 +21,9 @@ export default class AssignmentForm extends LightningElement {
     @track insertResult
     @track insertError
 
+    @track insertedTitle
+    @track insertedId
+
     // COMBOBOX OPTIONS
     get options() {
         return [
@@ -33,7 +37,7 @@ export default class AssignmentForm extends LightningElement {
     handleTitleChange(evt) {
         if (evt) {
             this.titleValue = evt.target.value;
-
+            console.log('TITLE VALUE: ', this.titleValue)
             // DISABLE THE BUTTON IF TITLE IS NOT PRESENT
             this.isDisabled = this.titleValue.length > 0 ? this.isDisabled = false : this.isDisabled = true;
 
@@ -60,15 +64,20 @@ export default class AssignmentForm extends LightningElement {
         this.placeHolderValue = this.statusvalue;
     }
 
-    //FOR SAVING THE RECORD
+    //FOR INSERTING THE RECORD
     handleSave(event) {
 
         // CALLING APEX TO INSERT THE ASSIGNMENT
         insertAssignment({ title: this.titleValue, description: this.descriptionValue, currentdate: this.dateValue, status: this.statusvalue }).then(
             result => {
-                console.log('RESULT: ', JSON.stringify(result));
+
                 this.insertResult = result;
 
+                // FOR STORING THE INSERTED TITLE AND ITS RESPECTIVE ID
+                this.insertedTitle = result[0]['Title__c']
+                this.insertedId = result[0]['Id'];
+                console.log('RESULT: ', JSON.stringify(result))
+                console.log('INSERTED TTILE AND NAME: ', this.insertedTitle, ' ', this.insertedId);
                 // FOR TOAST
                 this.dispatchEvent(new ShowToastEvent({
                     title: 'Success',
@@ -78,11 +87,11 @@ export default class AssignmentForm extends LightningElement {
 
                 //FOR DISPATCHING EVENT TO PARENT(FOR UPDATING ASSIGNMENT LIST)
                 this.dispatchEvent(new CustomEvent('save', { detail: result }))
-                //location.reload();
+
             }
         ).catch(error => {
             this.insertError = error
-            console.log('ERROR: ', JSON.stringify(error))
+
             this.dispatchEvent(new ShowToastEvent({
                 title: 'Error Creating Record',
                 message: error.body.message,
@@ -96,6 +105,44 @@ export default class AssignmentForm extends LightningElement {
     // FOR UPDATING THE RECORD
     handleEdit(evt) {
 
+        // CALLING APEX TO INSERT THE ASSIGNMENT
+
+        if (this.insertedTitle == this.titleValue) {
+
+            updateAssignment({ Id: this.insertedId, title: this.titleValue, description: this.descriptionValue, currentdate: this.dateValue, status: this.statusvalue }).then(
+                result => {
+
+                    this.insertResult = result;
+
+                    // FOR TOAST
+                    this.dispatchEvent(new ShowToastEvent({
+                        title: 'Success',
+                        message: 'Assignment Saved',
+                        variant: 'success'
+                    }))
+
+                    location.reload();
+
+                }
+            ).catch(error => {
+                this.insertError = error
+
+                this.dispatchEvent(new ShowToastEvent({
+                    title: 'Error Creating Record',
+                    message: error.body.message,
+                    variant: 'error'
+                }))
+
+            })
+        }
+        else {
+            this.isDisabled = !this.isDisabled
+            this.dispatchEvent(new ShowToastEvent({
+                title: 'Cannot Edit',
+                message: 'We can edit only the same Title, for new Title please use SAVE option',
+                variant: 'error'
+            }))
+        }
     }
 
 }

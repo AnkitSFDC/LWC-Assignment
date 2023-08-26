@@ -186,11 +186,22 @@ export default class AssignmentList extends LightningElement {
     }
 
 
-    // HANDLE CHILD ELEMENT SAVE AND UPDATE ASSIGNMENT LIST
+    // HANDLE CHILD ELEMENT SAVE 
     handleSaveRecord(evt) {
         if (evt) {
             this.assignRecList = [...this.assignRecList, evt.detail[0]];
+            this.initialRecords = this.assignRecList
+
         }
     }
+
+    // HANDLE CHILD ELEMENT UPDATE ASSIGNMENT LIST
+    // handleSaveRecord(evt) {
+    //     if (evt) {
+    //         this.assignRecList = [...this.assignRecList, evt.detail[0]];
+    //         this.initialRecords = this.assignRecList
+
+    //     }
+    // }
 
 }
