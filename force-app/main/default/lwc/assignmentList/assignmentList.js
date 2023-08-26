@@ -37,10 +37,8 @@ export default class AssignmentList extends LightningElement {
 
     ];
 
-
-
     // PROPERTIES TO STORE THE LIST AND RESULT
-    @api assignRecList;           // LIST OF ASSIGNMENT IN DATATABLE
+    @api assignRecList;     // LIST OF ASSIGNMENT IN DATATABLE
     @track error;           // ERROR: FROM APEX CALL
     @track searchString;    // INPUT WE GIVE IN SEARCH
     @track initialRecords;

@@ -12,5 +12,30 @@ public with sharing class AssignmentsList {
         }
     }
 
+    @AuraEnabled
+    public static List<Assignment__c> insertAssignment(String title,String description, Date currentdate, String status){
+        try {
+            List<Assignment__c> newAssignList = new List<Assignment__c>();
+
+            if(String.isNotBlank(title)){
+                Assignment__c obj = new Assignment__c();
+                obj.Title__c = title;
+                obj.Description__c = description;
+                obj.DueDate__c = currentdate;
+                obj.Status__c = status;
+
+                newAssignList.add(obj);
+            }
+
+            if(!newAssignList.isEmpty()){
+                insert newAssignList;
+            }
+            
+            return newAssignList;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
 
 }

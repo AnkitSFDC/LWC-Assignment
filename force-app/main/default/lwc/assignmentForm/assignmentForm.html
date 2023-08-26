@@ -1,0 +1,33 @@
+<template>
+    <template lwc:if={insertError}>
+        {insertError}
+    </template>
+
+    <template lwc:elseif={insertResult}>
+        <lightning-card title="LIGHTNING FORM" class="slds-p-around_medium">
+
+            <!-- TITLE INPUT AND CLIENT SIDE VALIDATION -->
+            <lightning-input label="Title" type="text" required="" class="slds-p-around_small"
+                onchange={handleTitleChange}>
+            </lightning-input>
+
+            <!-- DESCRIPTION INPUT -->
+            <lightning-input label="Description" type="text" class="slds-p-around_small" onchange={handleDescChange}>
+            </lightning-input>
+
+            <!-- DATE INPUT -->
+            <lightning-input label="Date" type="Date" class="slds-p-around_small" onchange={handleDateChange}>
+            </lightning-input>
+
+            <!-- COMBOBOX INPUT -->
+            <lightning-combobox name="progress" label="Status" value={statusvalue} placeholder={placeHolderValue}
+                options={options} onchange={handleChange} class="slds-p-around_small"></lightning-combobox>
+
+            <!-- SAVE BUTTON -->
+            <lightning-button label="Save" disabled={isDisabled} class="slds-p-around_small" variant="success"
+                onclick={handleSave}></lightning-button>
+        </lightning-card>
+
+    </template>
+
+</template>
