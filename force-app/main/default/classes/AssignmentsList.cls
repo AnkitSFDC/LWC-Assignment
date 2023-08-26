@@ -1,5 +1,5 @@
 public with sharing class AssignmentsList {
-    
+    @AuraEnabled(cacheable=true)
     public static List<Assignment__c> getAssignmentList(){
 
         try{
@@ -8,7 +8,9 @@ public with sharing class AssignmentsList {
             return result;
         }
         catch(Exception e){
-            return null;
+            throw new AuraHandledException(e.getMessage());
         }
     }
+
+
 }

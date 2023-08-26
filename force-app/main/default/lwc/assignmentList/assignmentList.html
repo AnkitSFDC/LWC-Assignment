@@ -1,0 +1,42 @@
+<template>
+    <!-- WHEN ERROR OCCURS: SHOW ERROR SCREEN -->
+    <template lwc:if={error}>
+        SOMETHING WENT WRONG: {error}
+    </template>
+    <!-- WHEN SUCCESS RESPONSE: SHOW SEARCH, TABLE & PAGINATION -->
+    <template lwc:elseif={assignRecList}>
+        <lightning-card title="LIGHTNING DATA TABLE">
+
+            <!-- FOR SEARCH  -->
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="6" class="slds-align_absolute-left slds-p-around_medium">
+                    <lightning-input type="search" label="Search LWC TITLE" onchange={handleSearch}></lightning-input>
+                </lightning-layout-item>
+            </lightning-layout>
+
+            <!-- FOR DATA TABLE -->
+            <lightning-datatable key-field="id" data={assignRecList} columns={columns} hide-checkbox-column="true"
+                data-id="table" onrowaction={handleRowAction} class="slds-p-around_medium"></lightning-datatable>
+
+
+            <!-- NEXT AND PREVIOUS BUTTON -->
+            <lightning-layout horizontal-align="space">
+                <lightning-layout-item flexibility="auto">
+                    <lightning-button label="Previous" icon-name="utility:chevronleft" onclick={previousHandler}>
+                    </lightning-button>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="auto">
+                    Page <b>{page}</b> of <b>{totalPage}</b>
+                </lightning-layout-item>
+                <lightning-layout-item flexibility="auto">
+                    <lightning-button label="Next" icon-name="utility:chevronright" icon-position="right"
+                        onclick={nextHandler}>
+                    </lightning-button>
+                </lightning-layout-item>
+            </lightning-layout>
+
+        </lightning-card>
+    </template>
+
+
+</template>
