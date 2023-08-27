@@ -5,10 +5,14 @@
     </template>
     <!-- WHEN SUCCESS RESPONSE: SHOW SEARCH, TABLE & PAGINATION -->
     <template lwc:elseif={assignRecList}>
-        <lightning-card title="LIGHTNING DATA TABLE">
+        <lightning-card>
 
             <!-- FOR SAVING / EDIT FORM: CALLING CHILD COMPONENT -->
             <c-assignment-form onsave={handleSaveRecord}></c-assignment-form>
+
+            <div class="slds-p-around_medium slds-text-heading_small">
+                <h1><b>LIGHTNING DATATABLE</b></h1>
+            </div>
             <!-- FOR SEARCH  -->
             <lightning-layout multiple-rows>
                 <lightning-layout-item size="6" class="slds-align_absolute-left slds-p-around_medium">
@@ -17,9 +21,10 @@
             </lightning-layout>
 
             <!-- FOR DATA TABLE -->
-            <lightning-datatable key-field="id" data={assignRecList} columns={columns} hide-checkbox-column="true"
-                data-id="table" onrowaction={handleRowAction} class="slds-p-around_medium"></lightning-datatable>
-
+            <div class="slds-p-around_medium">
+                <lightning-datatable key-field="id" data={assignRecList} columns={columns} hide-checkbox-column="true"
+                    data-id="table" onrowaction={handleRowAction} class="slds-p-around_medium"></lightning-datatable>
+            </div>
 
             <!-- NEXT AND PREVIOUS BUTTON -->
             <lightning-layout horizontal-align="space">
