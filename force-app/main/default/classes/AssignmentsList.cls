@@ -1,3 +1,10 @@
+/**
+ *  Created By: Ankit Palahania
+ *  Date: 25th Aug, 2023
+ *  Function: To query , insert and update the Assignment Records 
+ *  Last Modified: 27th Aug, 2023
+ */
+
 public with sharing class AssignmentsList {
 
     // FOR RETURNING THE ASSIGNMENTS LIST

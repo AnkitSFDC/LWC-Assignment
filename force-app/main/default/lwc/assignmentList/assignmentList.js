@@ -1,16 +1,17 @@
 /**
  *  Created By: Ankit Palahania
  *  Date: 25th Aug, 2023
- *  ASSIGMENT: Create a lightning data
- * 
+ *  Component: Lightning Datatable with Search and Pagination
+ *  Last Modified: 27th Aug, 2023
  */
 
 import { LightningElement, track, wire, api } from 'lwc';
 import AssignList from '@salesforce/apex/AssignmentsList.getAssignmentList';
 export default class AssignmentList extends LightningElement {
 
-    // SETTING COLUMNS FOR TABLE
-    @track columns = [{
+    // SETTING COLUMNS FOR TABLE 
+    // api : PROPERTIES ARE PUBLIC AND CAN BE ASSIGNED FROM PARENT COMPONENT IN FUTURE 
+    @api columns = [{
         label: 'Title',
         fieldName: 'Title__c',
         type: 'text',
@@ -38,18 +39,20 @@ export default class AssignmentList extends LightningElement {
     ];
 
     // PROPERTIES TO STORE THE LIST AND RESULT
-    @track assignRecList;     // LIST OF ASSIGNMENT IN DATATABLE
+    // api : PROPERTIES ARE PUBLIC AND CAN BE ASSIGNED FROM PARENT COMPONENT IN FUTURE
+    @api assignRecList;     // LIST OF ASSIGNMENT IN DATATABLE
     @track error;           // ERROR: FROM APEX CALL
     @track searchString;    // INPUT WE GIVE IN SEARCH
-    @track initialRecords;
+    @track initialRecords;  // INITIAL RECORDS FOR SEARCHING
 
+    // PROPERTIES FOR SEARCHING
     @track value;
     @track error;
     @track data;
-    @api sortedDirection = 'asc';
-    @api sortedBy = 'Name';
+
     @api searchKey = '';
-    result;
+
+    // PROPPERTIES FOR PROCESSING AND PAGINATION
     @track allSelectedRows = [];
     @track page = 1;
     @track items = [];
@@ -60,23 +63,28 @@ export default class AssignmentList extends LightningElement {
     @track pageSize = 5;
     @track totalRecountCount = 0;
     @track totalPage = 0;
-    isPageChanged = false;
-    initialLoad = true;
-    mapoppNameVsOpp = new Map();;
+    @track isPageChanged = false;
 
+    // PROPERTY FOR STORING THE REFRESHED LIST
+    @track refreshListResult
 
 
     // USING WIRE TO CALL APEX METHOD
     @wire(AssignList) listOfRecords({ data, error }) {
         // IF WE GET THE DATA FROM THE APEX
         if (data) {
+            // SETTING SUCCESS DATA FOR LIST
             this.assignRecList = data;
             this.initialRecords = data;
+            this.refreshListResult = data;
+
+            // FOR PROCESSING RECORDS FOR PAGINATION PER PAGE
             this.processRecords(data);
 
         }
         // IF WE GET THE ERROR 
         else if (error) {
+            // SETTING ERROR
             this.error = error;
         }
     }
@@ -119,7 +127,9 @@ export default class AssignmentList extends LightningElement {
                 this.assignRecList = searchRecords;
             }
         } else {
+            // IF NO SEARCH KEY - DEFAULT LIST AND PROCESS BACK RECORDS TO DEFAULT
             this.assignRecList = this.initialRecords;
+            this.processRecords(this.assignRecList);
         }
     }
 
@@ -130,6 +140,7 @@ export default class AssignmentList extends LightningElement {
         this.totalRecountCount = data.length;
         this.totalPage = Math.ceil(this.totalRecountCount / this.pageSize);
 
+        // PROCESSED AND STORING RECORDS PER PAGE
         this.assignRecList = this.items.slice(0, this.pageSize);
         this.endingRecord = this.pageSize;
 
@@ -143,14 +154,17 @@ export default class AssignmentList extends LightningElement {
             this.displayRecordPerPage(this.page);
         }
         var selectedIds = [];
+
+        // PUSHING PREVIOUS SET OF RECORDS TO PREVIOUS PAGE
         for (var i = 0; i < this.allSelectedRows.length; i++) {
             selectedIds.push(this.allSelectedRows[i].Id);
         }
+
+        // GET THE ELEMENT WHICH HAS DATA-ID=Table, i.e. DATATABLE
         this.template.querySelector(
             '[data-id="table"]'
         ).selectedRows = selectedIds;
 
-        console.log('========== PREVIOUS HANDLER=============')
     }
 
     // ON CLICK OF NEXT BUTTON THIS METHOD WILL BE CALLED
@@ -161,13 +175,17 @@ export default class AssignmentList extends LightningElement {
             this.displayRecordPerPage(this.page);
         }
         var selectedIds = [];
+
+        // PUSHING NEXT SET OF RECORDS IN NEXT PAGE
         for (var i = 0; i < this.allSelectedRows.length; i++) {
             selectedIds.push(this.allSelectedRows[i].Id);
         }
+
+        // GET THE ELEMENT WHICH HAS DATA-ID=Table, i.e. DATATABLE
         this.template.querySelector(
             '[data-id="table"]'
         ).selectedRows = selectedIds;
-        console.log('========== NEXT HANDLER=============')
+
 
     }
 
@@ -189,19 +207,18 @@ export default class AssignmentList extends LightningElement {
     // HANDLE CHILD ELEMENT SAVE 
     handleSaveRecord(evt) {
         if (evt) {
-            this.assignRecList = [...this.assignRecList, evt.detail[0]];
-            this.initialRecords = this.assignRecList
+
+            // AFTER SAVE REFRESHING THE LIST FOR TABLE
+            this.assignRecList = [...this.refreshListResult, evt.detail[0]];
+
+            // AFTER SAVE REFRESHING THE LIST FOR SEARCHING AND PROCESSING
+            this.initialRecords = [...this.refreshListResult, evt.detail[0]]
+
+            // SINCE LIST IS UPDATED , AGAIN PROCESS THE RECORDS WITH UPDATED LIST
+            this.processRecords(this.assignRecList)
 
         }
     }
 
-    // HANDLE CHILD ELEMENT UPDATE ASSIGNMENT LIST
-    // handleSaveRecord(evt) {
-    //     if (evt) {
-    //         this.assignRecList = [...this.assignRecList, evt.detail[0]];
-    //         this.initialRecords = this.assignRecList
-
-    //     }
-    // }
 
 }

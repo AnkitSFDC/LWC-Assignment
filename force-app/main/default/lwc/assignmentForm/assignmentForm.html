@@ -1,6 +1,5 @@
 <template>
 
-
     <lightning-card title="LIGHTNING FORM" class="slds-p-around_medium">
 
         <!-- TITLE INPUT AND CLIENT SIDE VALIDATION: AS TITLEIS MANDATORY AND MUST BE UNIQUE(Like Name Field) -->
@@ -20,6 +19,7 @@
             options={options} onchange={handleChange} class="slds-p-around_small"></lightning-combobox>
 
         <!-- SAVE & EDIT BUTTON -->
+        <!-- BOTH BUTTONS WILL BE DISABLED IF MANDATORY FIELD EMPTY -->
         <lightning-layout class="slds-align_absolute-center">
             <lightning-layout-item>
                 <lightning-button label="Edit" disabled={isDisabled} class="slds-p-around_small" variant="Brand"

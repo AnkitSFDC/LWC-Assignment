@@ -1,3 +1,10 @@
+/**
+ *  Created By: Ankit Palahania
+ *  Date: 25th Aug, 2023
+ *  Component: Lightning Inputs and Buttons for Save and edit record
+ *  Last Modified: 27th Aug, 2023
+ */
+
 import { LightningElement, track, api } from 'lwc';
 import insertAssignment from '@salesforce/apex/AssignmentsList.insertAssignment';
 import updateAssignment from '@salesforce/apex/AssignmentsList.updateAssignment';
@@ -24,7 +31,7 @@ export default class AssignmentForm extends LightningElement {
     @track insertedTitle
     @track insertedId
 
-    // COMBOBOX OPTIONS
+    // COMBOBOX OPTIONS: AS OF NOW STATIC BUT WE CAN CHANGE TO DYNAMIC AS PER USED CASE
     get options() {
         return [
             { label: 'Not Started', value: 'Not Started' },
@@ -90,6 +97,8 @@ export default class AssignmentForm extends LightningElement {
 
             }
         ).catch(error => {
+
+            // FOR STORING ERROR AND SHOWING ERROR TOAST
             this.insertError = error
 
             this.dispatchEvent(new ShowToastEvent({
@@ -102,7 +111,7 @@ export default class AssignmentForm extends LightningElement {
     }
 
 
-    // FOR UPDATING THE RECORD
+    // FOR UPDATING THE RECORD: CALLING APEX
     handleEdit(evt) {
 
         // CALLING APEX TO INSERT THE ASSIGNMENT
@@ -126,7 +135,7 @@ export default class AssignmentForm extends LightningElement {
                 }
             ).catch(error => {
                 this.insertError = error
-
+                // FOR ERROR TOAST
                 this.dispatchEvent(new ShowToastEvent({
                     title: 'Error Creating Record',
                     message: error.body.message,
@@ -137,6 +146,8 @@ export default class AssignmentForm extends LightningElement {
         }
         else {
             this.isDisabled = !this.isDisabled
+
+            // IF WE EDIT THE NEW RECORD, ERROR AS WE CAN EDIT THE EXISTING RECORD ONLY AND ITS TITLE SHOULD MATCH
             this.dispatchEvent(new ShowToastEvent({
                 title: 'Cannot Edit',
                 message: 'We can edit only the same Title, for new Title please use SAVE option',
